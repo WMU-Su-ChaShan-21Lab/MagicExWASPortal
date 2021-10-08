@@ -1,0 +1,41 @@
+[[source]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = { extras = ["async"], version = "*" }
+python-dotenv = "*"
+bcrypt = "*"
+cryptography = "*"
+flask-sqlalchemy = "*"
+sqlalchemy = "*"
+pymysql = "*"
+hashids = "*"
+flask-redis = "*"
+redis = "*"
+flask-migrate = "*"
+flask-whooshee = "*"
+flask-wtf = "*"
+wtforms = "*"
+flask-httpauth = "*"
+flask-login = "*"
+flask-cors = "*"
+flask-socketio = "*"
+flask-mail = "*"
+email-validator = "*"
+flask-rq2 = "*"
+celery = "*"
+flask-babel = "*"
+flask-moment = "*"
+reportlab = "*"
+python-docx = "*"
+xlrd = "*"
+openpyxl = "*"
+pypinyin = "*"
+eventlet = "*"
+requests = "*"
+waitress = "*"
+
+[requires]
+python_version = "3.9"
