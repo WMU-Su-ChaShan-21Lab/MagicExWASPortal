@@ -70,8 +70,8 @@
 SECRET_KEY='35JN7GFaUFNeriObUj93bQpavYWsGPOp6I4BDoe-U6Q'
 SECURITY_PASSWORD_SALT='120426439174435924094353414614255850770'
 # MySQL数据库URL
-# 格式为DATABASE_URL='mysql+pymysql://username:password@host/databasename'
-DATABASE_URL='mysql+pymysql://username:password@host/databasename'
+# 格式为 SQLALCHEMY_DATABASE_URI='mysql+pymysql://username:password@host:port/databasename'
+SQLALCHEMY_DATABASE_URI='mysql+pymysql://username:password@host:port/databasename'
 ```
 
 * 启动pipenv虚拟环境(千万注意.env文件中不要有中文注释)：`pipenv shell`
