@@ -15,7 +15,7 @@ __auth__ = 'diklios'
 
 from flask import request, Blueprint, g
 from itertools import chain
-from app.libs.error_exception import Success
+from app.libs.error_exception import Success, NoDataError
 from app.models.myopia.HM_single_variant import HMSingleVariant
 from app.models.myopia.rare_mac3_saige_lof import RareMac3SaigeLof
 from app.models.myopia.rare_mac3_saige_damage import RareMac3SaigeDamage
@@ -45,10 +45,17 @@ def search_list():
 
 @search_bp.post('/gene')
 def search_gene():
+    data = {}
     gene_name = g.data.get('gene_name', '')
-    gene_damage = RareMac3SaigeDamage.query.filter_by(gene=gene_name).first_or_404()
-    gene_lof = RareMac3SaigeLof.query.filter_by(gene=gene_name).first_or_404()
-    return Success(data={'damage': dict(gene_damage), 'lof': dict(gene_lof)})
+    gene_damage = RareMac3SaigeDamage.query.filter_by(gene=gene_name).first()
+    gene_lof = RareMac3SaigeLof.query.filter_by(gene=gene_name).first()
+    if gene_damage is not None:
+        data[''] = dict(gene_damage)
+    if gene_lof is not None:
+        data['lof'] = dict(gene_lof)
+    if gene_lof is None and gene_damage is None:
+        return NoDataError(chinese_msg='没有相应的数据')
+    return Success(data=data)
 
 
 @search_bp.post('/variant')
