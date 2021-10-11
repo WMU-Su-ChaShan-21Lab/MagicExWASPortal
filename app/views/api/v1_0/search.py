@@ -27,11 +27,12 @@ search_bp = Blueprint('search', __name__)
 def handle_request():
     json = request.get_json(silent=True)
     args = request.args.to_dict()
-    data = {**json, **args}
-    g.data = data
+    if json is not None and args is not None:
+        data = {**json, **args}
+        g.data = data
 
 
-@search_bp.get('/list')
+@search_bp.post('/list')
 def search_list():
     gene_name = str(g.data.get('gene_name', ''))
     rare_mac3_saige_damage_result = RareMac3SaigeDamage.query.with_entities(RareMac3SaigeDamage.gene).filter(
@@ -42,7 +43,7 @@ def search_list():
         data=list(set([*list(chain(*rare_mac3_saige_damage_result)), *list(chain(*rare_mac3_saige_lof_result))])))
 
 
-@search_bp.get('/gene')
+@search_bp.post('/gene')
 def search_gene():
     gene_name = g.data.get('gene_name', '')
     gene_damage = RareMac3SaigeDamage.query.filter_by(gene=gene_name).first_or_404()
@@ -50,7 +51,7 @@ def search_gene():
     return Success(data={'damage': dict(gene_damage), 'lof': dict(gene_lof)})
 
 
-@search_bp.get('/variant')
+@search_bp.post('/variant')
 def search_variant():
     SNP = g.data.get('SNP', '')
     variant = HMSingleVariant.query.filter_by(SNP=SNP).first_or_404()
