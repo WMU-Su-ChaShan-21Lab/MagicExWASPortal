@@ -39,4 +39,4 @@ def result(content):
     if data == {}:
         return redirect(url_for('myopia.page.error_page'))
     else:
-        return render_template('search_result_page.html', data=search_classify(content))
+        return render_template('search_result_page.html', data=data)
