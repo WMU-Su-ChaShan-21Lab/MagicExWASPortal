@@ -34,9 +34,9 @@ def error_page():
 @page_bp.get('/result/<string:content>')
 def result(content):
     if content == '':
-        redirect(url_for('myopia.page.error_page'))
+        return redirect(url_for('myopia.page.error_page'))
     data = search_classify(content)
     if data == {}:
-        redirect(url_for('myopia.page.error_page'))
+        return redirect(url_for('myopia.page.error_page'))
     else:
         return render_template('search_result_page.html', data=search_classify(content))
