@@ -14,10 +14,7 @@
 __auth__ = 'diklios'
 
 from flask import request, Blueprint, render_template
-from app.models.myopia.HM_single_variant import HMSingleVariant
-from app.models.myopia.rare_mac3_saige_lof import RareMac3SaigeLof
-from app.models.myopia.rare_mac3_saige_damage import RareMac3SaigeDamage
-
+from app.viewModels.myopia.search import search_gene_in_lof_and_damage
 page_bp = Blueprint('page', __name__)
 
 
@@ -28,12 +25,7 @@ def index():
     return render_template('index.html')
 
 
-@page_bp.get('/search_gene_result')
-def search_gene_result():
-    json = request.get_json(silent=True)
-    args = request.args.to_dict()
-    data = {**json, **args}
-    search_content = str(data.get('search_content', ''))
-    damage = RareMac3SaigeDamage.query.filter_by(gene=search_content).first_or_404()
-    lof = RareMac3SaigeLof.query.filter_by(gene=search_content).first_or_404()
-    return render_template('', damage=dict(damage), lof=dict(lof))
+@page_bp.get('/search_gene_result/<string:gene_name>')
+def search_gene_result(gene_name):
+    data=search_gene_in_lof_and_damage(gene_name)
+    return render_template('search_page.html',data=data)

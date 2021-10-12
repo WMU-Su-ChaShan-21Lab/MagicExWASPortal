@@ -41,7 +41,7 @@
                            placeholder="Search by gene or variant (Example:EPO;10:100007417:G:A)"
                            data-testid="SearchBox.input" type="search">
                     <button class="btn btn-dark btn-lg">Search</button>
-onclick="window.location.href='spage.html
+                    onclick="window.location.href='spage.html
                 </div>
                 <p class="p-5 text-dark">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid aut cumque
                     debitis deleniti dicta dolores doloribus iure minima nemo optio porro quaerat, quasi quibusdam,
@@ -63,20 +63,28 @@ onclick="window.location.href='spage.html
             const btn = document.getElementsByTagName('button')[0];
             //绑定事件
             btn.onclick = function () {
-                            //获取输入内容
-            var getHtml = document.querySelector('#textId').value;
+                //获取输入内容
+                var 7 = document.querySelector('#textId').value;
 
                 //console.log(getHtml);
 
-                gtData('/api/v1_0/search/gene', {'gene_name': getHtml})
+                getJsonData('/api/v1_0/search/gene', {'gene_name': 7})
+                    .then(data => {
 
-                    .then(data => console.log(data)) // JSON from `response.json()` call
-                    .catch(error => console.error(error))
+                        console.log("success");
+                        window.location.href = '/search_gene_result/' + 7;
+
+                    }) // JSON from `response.json()` cal
+
+                    // l
+                    .catch(error => {
+                        console.error(error)
+                        window.alert("没有相应的数据");
+                    })
             }
 
-            function gtData(url, data) {
+            function getJsonData(url, data) {
                 // Default options are marked with *
-                console.log(data);
                 return fetch(url, {
                     body: JSON.stringify(data), // must match 'Content-Type' header
                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -89,8 +97,7 @@ onclick="window.location.href='spage.html
                     mode: 'cors', // no-cors, cors, *same-origin
                     redirect: 'follow', // manual, *follow, error
                     referrer: 'no-referrer', // *client, no-referrer
-                })
-                    .then(response => response.json()) // 輸出成 json
+                }).then(response => response.json())
             }
         </script>
     </section>
