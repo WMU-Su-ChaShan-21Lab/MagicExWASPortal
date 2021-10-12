@@ -13,8 +13,9 @@
 """
 __auth__ = 'diklios'
 
-from flask import request, Blueprint, render_template
-from app.viewModels.myopia.search import search_gene_in_lof_and_damage
+from flask import Blueprint, render_template
+from app.viewModels.myopia.search import search_classify
+
 page_bp = Blueprint('page', __name__)
 
 
@@ -25,7 +26,11 @@ def index():
     return render_template('index.html')
 
 
-@page_bp.get('/search_gene_result/<string:gene_name>')
-def search_gene_result(gene_name):
-    data=search_gene_in_lof_and_damage(gene_name)
-    return render_template('search_page.html',data=data)
+@page_bp.get('/404')
+def error_page():
+    return render_template('404.html')
+
+
+@page_bp.get('/result/<string:content>')
+def result(content):
+    return render_template('search_result_page.html', data=search_classify(content))
