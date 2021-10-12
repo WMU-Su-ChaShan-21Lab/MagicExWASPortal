@@ -50,6 +50,6 @@ def search_variant(SNP_name):
 
 def search_classify(content: str):
     if content.find(':') == -1:
-        return search_variant(content)
-    else:
         return search_gene(content)
+    else:
+        return search_variant(content)
