@@ -13,7 +13,7 @@
 """
 __auth__ = 'diklios'
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect
 from app.viewModels.myopia.search import search_classify
 
 page_bp = Blueprint('page', __name__)
@@ -33,4 +33,10 @@ def error_page():
 
 @page_bp.get('/result/<string:content>')
 def result(content):
-    return render_template('search_result_page.html', data=search_classify(content))
+    if content == '':
+        redirect('error_page')
+    data = search_classify(content)
+    if data == {}:
+        redirect('error_page')
+    else:
+        return render_template('search_result_page.html', data=search_classify(content))
