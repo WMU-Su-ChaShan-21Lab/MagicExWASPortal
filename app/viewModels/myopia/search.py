@@ -44,7 +44,7 @@ def search_variant(SNP_name):
     data = {}
     variant = HMSingleVariant.query.filter_by(SNP=SNP_name).first()
     if variant is not None:
-        data['variant'] = variant
+        data['variant'] = dict(variant)
     return data
 
 
