@@ -13,10 +13,8 @@
 """
 __auth__ = 'diklios'
 
-from flask import request, Blueprint, render_template
-from app.models.myopia.HM_single_variant import HMSingleVariant
-from app.models.myopia.rare_mac3_saige_lof import RareMac3SaigeLof
-from app.models.myopia.rare_mac3_saige_damage import RareMac3SaigeDamage
+from flask import Blueprint, render_template, redirect,url_for
+from app.viewModels.myopia.search import search_classify
 
 page_bp = Blueprint('page', __name__)
 
@@ -28,12 +26,17 @@ def index():
     return render_template('index.html')
 
 
-@page_bp.get('/search_gene_result')
-def search_gene_result():
-    json = request.get_json(silent=True)
-    args = request.args.to_dict()
-    data = {**json, **args}
-    search_content = str(data.get('search_content', ''))
-    damage = RareMac3SaigeDamage.query.filter_by(gene=search_content).first_or_404()
-    lof = RareMac3SaigeLof.query.filter_by(gene=search_content).first_or_404()
-    return render_template('', damage=dict(damage), lof=dict(lof))
+@page_bp.get('/404')
+def error_page():
+    return render_template('404.html')
+
+
+@page_bp.get('/result/<string:content>')
+def result(content):
+    if content == '':
+        return redirect(url_for('myopia.page.error_page'))
+    data = search_classify(content)
+    if data == {}:
+        return redirect(url_for('myopia.page.error_page'))
+    else:
+        return render_template('search_result_page.html', data=data)
