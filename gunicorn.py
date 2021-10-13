@@ -1,5 +1,9 @@
-from app.settings import basedir
 import multiprocessing
+
+from gevent import monkey
+from app.settings import basedir
+
+monkey.patch_all()
 
 # 绑定ip和端口号
 bind = '0.0.0.0:8000'
