@@ -36,6 +36,7 @@ pypinyin = "*"
 eventlet = "*"
 requests = "*"
 waitress = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"
