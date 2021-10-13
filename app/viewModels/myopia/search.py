@@ -22,9 +22,9 @@ def search_variant_list(content):
 
 def search_classify_list(content):
     if content.find(':') == -1:
-        return search_variant_list(content)
-    else:
         return search_gene_list(content)
+    else:
+        return search_variant_list(content)
 
 
 def search_gene(gene_name):
@@ -32,7 +32,7 @@ def search_gene(gene_name):
     gene_damage = RareMac3SaigeDamage.query.filter_by(gene=gene_name).first()
     gene_lof = RareMac3SaigeLof.query.filter_by(gene=gene_name).first()
     if gene_damage is not None:
-        data[''] = dict(gene_damage)
+        data['damage'] = dict(gene_damage)
     if gene_lof is not None:
         data['lof'] = dict(gene_lof)
     if gene_lof is None and gene_damage is None:

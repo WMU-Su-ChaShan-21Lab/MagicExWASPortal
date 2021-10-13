@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static',filename='image/favicon.ico') }}"/>
     <title>searchpage</title>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -11,26 +12,42 @@
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
             crossorigin="anonymous"
     />
+    <link href="{{ url_for('static',filename='css/index.css') }}" rel="stylesheet"/>
 
+    <style>
+        a {
+            color: black;
+        }
 
+        a:hover {
+            color: hotpink;
+        }
+    </style>
 </head>
 <body>
 
 
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
     <div class="container">
-        <a href="#" class="navbar-brand">MAGIC ExWAS Portal</a>
-
+        <div style="float:left">
+            <img class="SearchPage__footerLogo__3Mkk6"
+                 src="{{ url_for('static',filename='image/logo_eye.png') }}"
+                 alt=""
+                 style="width: 35px;height:35px">
+            >
+            <!q1>
+            <a href="" class="navbar-brand">MAGIC ExWAS Portal</a>
+        </div>
         <form class="col-12 col-lg-auto mb-4 mb-lg-0 me-lg-3">
-
-            <div class="input-group">
-                <input  class="form-control" aria-label="Search by gene or variant"
+            <div id="parent" class="input-group form-group" type="mid">
+                <input id="textId_1" class="form-control" aria-label="Search by gene or variant"
                        placeholder="gene or variant"
-                       data-testid="SearchBox.input" type="search" value>
-                <button type="button" class="btn btn-dark" data-bs-toggle="tooltip"
-                        data-bs-placement="bottom" title="Example:EPO;10:100007417:G:A">Search
+                       data-testid="SearchBox.input" type="search" autocomplete="off" data-testid="SearchBox.input"
+                       type="search">
+                <button id="search_button" class="btn btn-dark btn-lg text-center" onclick="result_page()">Search
                 </button>
             </div>
+            <div id="output"></div>
         </form>
     </div>
 </nav>
@@ -60,144 +77,160 @@
 <nav class="navbar bg-white navbar-dark">
     <div class="container">
         <div class="ViewTitle__layout__11rF_"><h5 class="ViewTitle__heading__33w1v"><span
-                class="ViewTitle__label__XmoqG">Gene:</span></h5></div>
-    </div>
-
-</nav>
-
-<nav class="navbar bg-light navbar-dark">
-    <div class="container">
-        <p>
-            Filters:callasing model
-        </p>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-                PTV
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-            <label class="form-check-label" for="flexCheckChecked">
-                D-Mis
-            </label>
-        </div>
+                class="ViewTitle__label__XmoqG">
+            {% if data.lof %}
+                Gene:{{ data.lof.gene }}
+            {% elif data.damage %}
+                Gene:{{ data.damage.gene }}
+            {% elif data.variant %}
+                Variant:{{ data.variant.SNP }}
+            {% endif %}
+        </span></h5></div>
     </div>
 </nav>
 
-<template>
-    <el-table :data="tableData" style="width: 100%">
-        <el-table-column fixed prop="date" label="Date" width="150" />
-        <el-table-column prop="name" label="Name" width="120" />
-        <el-table-column prop="state" label="State" width="120" />
-        <el-table-column prop="city" label="City" width="120" />
-        <el-table-column prop="address" label="Address" width="600" />
-        <el-table-column prop="zip" label="Zip" width="120" />
-        <el-table-column fixed="right" label="Operations" width="120">
-            <template #default>
-                <el-button type="text" size="small" @click="handleClick"
-                >Detail</el-button
-                >
-                <el-button type="text" size="small">Edit</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
-</template>
+{% if data.lof  or data.damage %}
+    <nav class="navbar bg-light navbar-dark">
+        <div class="container">
+            <p>
+                Filters:callasing model
+            </p>
 
-<script>
-    <dl>
-        {# test jinja code #}
-        {% for key,value in data.items %}
-            <dt>{{ key }}</dt>
-            <dd>{{ value }}</dd>
-        {% endfor %}
-    </dl>
-
-</script>
+        </div>
+    </nav>
+{% endif %}
 
 <div class="table-responsive container">
 
-    <table class="table table-bordered">
+    <nav class="navbar bg-white navbar-dark">
+        {% if data.lof  or data.damage %}
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="lof-tab" data-bs-toggle="tab" data-bs-target="#lof"
+                            type="button"
+                            role="tab" aria-controls="lof" aria-selected="true">D-Mis
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="damage-tab" data-bs-toggle="tab" data-bs-target="#damage" type="button"
+                            role="tab" aria-controls="damage" aria-selected="false">PTV
+                    </button>
+                </li>
 
-        <thead>
-        <tr>
-            <th scope="col">0</th>
-            <th scope="col">1</th>
-            <th scope="col">2</th>
-            <th scope="col">3</th>
-            <th scope="col">4</th>
-            <th scope="col">5</th>
-            <th scope="col">6</th>
-            <th scope="col">7</th>
-            <th scope="col">8</th>
-            <th scope="col">9</th>
-            <th scope="col">10</th>
-            <th scope="col">11</th>
-            <th scope="col">12</th>
-            <th scope="col">13</th>
-            <th scope="col">14</th>
-            <th scope="col">15</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-            <td>11111111111111111111</td>
-        </tr>
-        </tbody>
+            </ul>
+            </nav>
 
-    </table>
+            <div class="tab-content p-5" id="myTabContent">
+                <div class="tab-pane fade show active" id="lof" role="tabpanel" aria-labelledby="home-tab">
+                    {% if data.lof %}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+
+                                {% for key, value in data.lof.items() %}
+                                    <th>
+                                        {{ key }}
+                                    </th>
+                                {% endfor %}
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for key, value in data.lof.items() %}
+                                    <td>
+                                        {{ value }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    {% else %}
+                        无数据
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="damage" role="tabpanel" aria-labelledby="profile-tab">
+                    {% if data.damage %}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+
+                                {% for key, value in data.damage.items() %}
+                                    <th>
+                                        {{ key }}
+                                    </th>
+                                {% endfor %}
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                {% for key, value in data.damage.items() %}
+                                    <td>
+                                        {{ value }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    {% else %}
+                        无数据
+                    {% endif %}
+                </div>
+            </div>
+        {% elif data.variant %}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+
+                    {% for key, value in data.variant.items() %}
+                        <th>
+                            {{ key }}
+                        </th>
+                    {% endfor %}
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    {% for key, value in data.variant.items() %}
+                        <td>
+                            {{ value }}
+                        </td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <script>
+                window.alert("没有相应的数据,请重新查询(Example:EPO;10:100007417:G:A)");
+            </script>
+            <h3>请重新查询(Example:EPO;10:100007417:G:A)</h3>
+        {% endif %}
+
 </div>
 
-<div class="container">
-    <div style="float:left" >
 
-        <a href="mailto:danielwyuan@gmail.com" class="text-decoration-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                 class="bi bi-envelope" viewBox="0 0 16 16">
-                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"></path>
-            </svg>
-            Contect us
-        </a>
-    </div>
-    <div style="float:right">
-        <div class="Copyright__container__1J1u_ SearchPage__copyrightContainer__3pmaj"><span>© MAGIC 2021</span></div>
-    </div>
-
-</div>
 <footer class="p-5 bg-light text-dark text-center">
+    <div class="container">
+        <div style="float:left">
+            <img class="SearchPage__footerLogo__3Mkk6"
+                 src="{{ url_for('static',filename='image/logo.png') }}"
+                 style="width: 100px;height:32px">
+            <a href="mailto:danielwyuan@gmail.com" class="text-decoration-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-envelope" viewBox="0 0 16 16">
+                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"></path>
+                </svg>
+                Contect us
+            </a>
+        </div>
+        <div style="float:right">
+            <div class="Copyright__container__1J1u_ SearchPage__copyrightContainer__3pmaj"><span>© MAGIC 2021</span>
+            </div>
+        </div>
+
+    </div>
 </footer>
 
 <script
@@ -206,5 +239,113 @@
         crossorigin="anonymous"
 ></script>
 
+<script type="text/javascript" src="{{ url_for('static',filename='js/autocomplete.js') }}"></script>
+<script>
+
+    /*------------------------------------下拉列表test----------------------------------------------*/
+    //函数防抖
+    function debounce(fn, wait) {
+        var timer = null;
+        return function () {
+            if (timer !== null) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(fn, wait);
+        }
+    }
+
+    const ac = new Autocomplete(document.querySelector('#textId_1'), {
+        data: {'label': 'none', 'value': 'none'},
+        treshold: 1,
+        maximumItems: 8,
+        onSelectItem: ({label, value}) => {
+            console.log("user selected:", label, value);
+        },
+    });
+
+    function handle() {
+        let content = document.querySelector('#textId_1').value;
+        if (content === '' || content === undefined) {
+            return;
+        }
+        console.log(content)
+        getJsonData('/api/v1_0/search/list', {'content': content})
+            .then(data => {
+                console.log(data.data);
+                ac.setData(data.data);
+
+            }) // JSON from `response.json()` call
+            .catch(error => {
+                console.error(error);
+            })
+    }
+
+    // 获取输入框元素(弃用) const input_box = document.querySelector('#textId_1')
+    window.addEventListener('input', debounce(handle, 1000));
+    /*------------------------------------下拉列表test----------------------------------------------*/
+
+
+    /*--------------------------------------搜索--------------------------------------------------*/
+    //获取button元素
+    const btn = document.getElementById('search_button');
+
+    //window.location.href = "http://127.0.0.1:5000/result/EOM";
+
+    //绑定事件
+    function result_page() {
+        console.log("Ddd");
+        //获取输入内容
+        let gene_name = document.querySelector('#textId_1').value;
+        console.log(gene_name.length);
+        if (gene_name.length != 0) {
+            console.log("not null");
+            let url = '/result/' + gene_name;
+            console.log(url);
+            window.location.href = url;
+            window.event.returnValue = false;
+        }
+        window.alert("点击成功");
+
+    }
+
+    {#btn.onmouseover = function () {
+        /*let gene_name = document.querySelector('#textId_1').value;
+        console.log(gene_name.length);
+        if(gene_name.length != 0){
+            console.log("not null");
+            window.location.href = '/result/'+gene_name;
+        }*/
+        //获取输入内容
+        let gene_name = document.querySelector('#textId_1').value;
+        console.log(gene_name.length);
+        if (gene_name.length != 0) {
+            console.log("not null");
+            let url = '/result/' + gene_name;
+            console.log(url);
+            window.location.href = url;
+        }
+        window.alert("悬停");
+
+    }#}
+
+    function getJsonData(url, data) {
+        // Default options are marked with *
+        return fetch(url, {
+            body: JSON.stringify(data), // must match 'Content-Type' header
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json'
+            },
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // *client, no-referrer
+        }).then(response => response.json())
+    }
+
+    /*--------------------------------------搜索--------------------------------------------------*/
+</script>
 </body>
 </html>

@@ -34,7 +34,9 @@ def search_list():
     content = str(g.data.get('content', ''))
     if content == '':
         return NoDataError('不能输入为空')
-    return Success(data=search_classify_list(content))
+    classify = search_classify_list(content)
+    data = [{'label': item, 'value': item} for item in classify]
+    return Success(data=data)
 
 
 @search_bp.post('/gene')

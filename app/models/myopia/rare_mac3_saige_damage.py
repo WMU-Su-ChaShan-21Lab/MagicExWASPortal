@@ -41,7 +41,7 @@ class RareMac3SaigeDamage(Base):
     CI1 = Column(String(20))
     CI2 = Column(String(20))
 
-    fields = ['id', 'gene', 'Phenotype', 'QV', 'Pvalue_FET', 'Pvalue_burden', 'Pvalue_SKAT', 'Pvalue_SKAT_O', 'Pvalue_ACAT_V',
+    fields = ['gene', 'Phenotype', 'QV', 'Pvalue_FET', 'Pvalue_burden', 'Pvalue_SKAT', 'Pvalue_SKAT_O', 'Pvalue_ACAT_V',
               'Pvalue_ACAT_O', 'Pvalue_SAIGE', 'participants', 'case', 'case_wild', 'control', 'control_wild',
               'pro_cases_with_QV', 'pro_control_with_QV', 'odds_ratio', 'CI1', 'CI2']
 
