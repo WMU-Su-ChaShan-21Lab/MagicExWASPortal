@@ -33,7 +33,7 @@ class HMSingleVariant(Base):
     EMMAX = Column(String(20))
     Logistic = Column(String(20))
 
-    fields = ['id', 'SNP', 'CHR', 'BP', 'REF', 'ALT', 'Beta', 'SE', 'OR', 'MLMA_LOCO', 'MLMA', 'EMMAX', 'Logistic']
+    fields = ['SNP', 'CHR', 'BP', 'REF', 'ALT', 'Beta', 'SE', 'OR', 'MLMA_LOCO', 'MLMA', 'EMMAX', 'Logistic']
 
 
 def init_HM_single_variant(table: list):
